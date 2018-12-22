@@ -5,6 +5,7 @@ namespace App\Letgo\Application\Controller;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ShoutController extends AbstractController
@@ -13,7 +14,10 @@ final class ShoutController extends AbstractController
     {
         $limit = $request->query->get('limit');
 
-	//check valid limit
+        if (!is_numeric($limit) || $limit < 1 || $limit > 10) {
+            return new JsonResponse(['error' => 'Limit parameter MUST be equal or less than 10'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
 	//check valid username ?
 
 	//service???

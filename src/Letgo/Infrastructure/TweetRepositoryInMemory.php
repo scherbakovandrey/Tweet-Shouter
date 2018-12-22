@@ -16,8 +16,12 @@ final class TweetRepositoryInMemory implements TweetRepository
     {
         $randomEntries = array_rand($this->tweets, $limit);
         $tweets = [];
-        foreach ($randomEntries as $randomEntry) {
-            $tweets[] = new Tweet($this->tweets[$randomEntry]);
+        if ($limit == 1) {
+            $tweets[] = new Tweet($this->tweets[$randomEntries]);
+        } else {
+            foreach ($randomEntries as $randomEntry) {
+                $tweets[] = new Tweet($this->tweets[$randomEntry]);
+            }
         }
         return $tweets;
     }
