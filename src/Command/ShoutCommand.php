@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
-use App\Letgo\Domain\ShoutServiceInterface;
+use App\Letgo\Infrastructure\ShoutService;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 
 class ShoutCommand extends Command
@@ -24,7 +24,7 @@ class ShoutCommand extends Command
      */
     private $repo;
 
-    public function __construct(ShoutServiceInterface $shoutService, TweetRepositoryInMemory $repo)
+    public function __construct(ShoutService $shoutService, TweetRepositoryInMemory $repo)
     {
         parent::__construct();
 

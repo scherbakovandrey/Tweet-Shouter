@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Letgo\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,8 +8,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShoutControllerTest extends WebTestCase
 {
-    //TODO: Check limit constrains with Exceptions
-
     public function testSuccess()
     {
         $client = static::createClient();

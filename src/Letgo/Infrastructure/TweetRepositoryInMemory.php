@@ -14,6 +14,8 @@ final class TweetRepositoryInMemory implements TweetRepository
      */
     public function searchByUserName(string $username, int $limit): array
     {
+        //We assume all usernames are valid. In production we may return empty $tweets if the username is not valid or doens't exist
+
         $randomEntries = array_rand($this->tweets, $limit);
         $tweets = [];
         if ($limit == 1) {
