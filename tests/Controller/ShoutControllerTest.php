@@ -14,6 +14,7 @@ class ShoutControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/shout/realDonaldTrump?limit=2');
+
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, count(json_decode($client->getResponse()->getContent())));
     }
@@ -23,7 +24,6 @@ class ShoutControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/shout/realDonaldTrump?limit=10');
         $this->assertTrue($client->getResponse()->isSuccessful());
-
         $this->assertEquals(10, count(json_decode($client->getResponse()->getContent())));
     }
 
@@ -32,7 +32,6 @@ class ShoutControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/shout/realDonaldTrump?limit=1');
         $this->assertTrue($client->getResponse()->isSuccessful());
-
         $this->assertEquals(1, count(json_decode($client->getResponse()->getContent())));
     }
 
@@ -52,6 +51,7 @@ class ShoutControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/shout/realDonaldTrump?limit=11');
+
         $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
     }
 

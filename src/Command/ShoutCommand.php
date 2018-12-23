@@ -3,10 +3,11 @@
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\Response;
+use App\Letgo\Domain\ShoutServiceInterface;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 
 class ShoutCommand extends Command
@@ -14,14 +15,20 @@ class ShoutCommand extends Command
     protected static $defaultName = 'app:shout';
 
     /**
+     * @var ShoutServiceInterface
+     */
+    private $shoutService;
+
+    /**
      * @var TweetRepositoryInMemory
      */
     private $repo;
 
-    public function __construct(TweetRepositoryInMemory $repo)
+    public function __construct(ShoutServiceInterface $shoutService, TweetRepositoryInMemory $repo)
     {
         parent::__construct();
 
+        $this->shoutService = $shoutService;
         $this->repo = $repo;
     }
 
@@ -35,26 +42,17 @@ class ShoutCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Tweets:');
-
         $twitterName = $input->getArgument('twitterName');
         $limit = $input->getArgument('limit');
 
-        if (!is_numeric($limit) || $limit < 1 || $limit > 10) {
-            $output->writeln('Error: Limit parameter MUST be equal or less than 10');
+        $apiResponse = $this->shoutService->shout($this->repo, $twitterName, $limit);
+
+        if ($apiResponse['status'] != Response::HTTP_OK) {
+            $output->writeln('Error: ' . $apiResponse['error']);
+            return false;
         }
 
-        //check valid username ?
-
-        //service???
-        $tweets = $this->repo->searchByUserName($twitterName, $limit);
-
-        //service???
-        $formattedTweets = [];
-        foreach ($tweets as $tweet) {
-            $formattedTweets[] = $tweet->getText();
-        }
-
-        $output->writeln($formattedTweets);
+        $output->writeln('Tweets:');
+        $output->writeln($apiResponse['tweets']);
     }
 }
