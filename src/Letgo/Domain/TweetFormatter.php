@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Letgo\Utils;
+namespace App\Letgo\Domain;
 
-final class TextFormatter
+final class TweetFormatter
 {
     public static function format(string $text): string
     {
