@@ -15,11 +15,11 @@ class ShoutCommand extends Command
     protected static $defaultName = 'app:shout';
 
     /**
-     * @var \App\Letgo\Infrastructure\TweetRepositoryInMemory
+     * @var TweetRepositoryInMemory
      */
     private $repo;
 
-    public function __construct(\App\Letgo\Infrastructure\TweetRepositoryInMemory $repo)
+    public function __construct(TweetRepositoryInMemory $repo)
     {
         parent::__construct();
 
@@ -30,8 +30,7 @@ class ShoutCommand extends Command
     {
         $this
             ->addArgument('twitterName', InputArgument::REQUIRED, 'The username of the Twitter user.')
-            ->addArgument('limit', InputArgument::REQUIRED, 'The limit of the tweets.')
-        ;
+            ->addArgument('limit', InputArgument::REQUIRED, 'The limit of the tweets.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,7 +45,6 @@ class ShoutCommand extends Command
             return false;
         }
 
-        $output->writeln('Tweets:');
         $output->writeln($apiResponse['tweets']);
     }
 }

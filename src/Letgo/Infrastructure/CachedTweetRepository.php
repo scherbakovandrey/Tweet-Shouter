@@ -42,7 +42,7 @@ final class CachedTweetRepository implements TweetRepositoryInterface
         return $tweets;
     }
 
-    private function getTweetsFromCacheRepository(string $username, int $limit) : array
+    private function getTweetsFromCacheRepository(string $username, int $limit): array
     {
         $tweets = $this->cachedRepository->get(self::$cacheNamespace . $username);
 

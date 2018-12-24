@@ -6,8 +6,7 @@ use App\Letgo\Domain\ShoutInterface;
 use App\Letgo\Domain\TweetFormatter;
 use App\Letgo\Domain\TweetsOutput;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
-use App\Letgo\Infrastructure\FilesystemCachedRepository;
-use App\Letgo\Infrastructure\CachedTweetRepository;
+use App\Letgo\Infrastructure\TweetRepositoryStaticFactory;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,11 +26,8 @@ class ShoutApp implements ShoutInterface
                 'error' => 'Limit parameter MUST be equal or less than 10.',
             ];
         }
-        $expiresAfter = $_SERVER['CACHE_EXPIRES_AFTER'];
-        $cacheFolder = $_SERVER['CACHE_FOLDER'];
 
-        //$tweetRepository = $repo;
-        $tweetRepository = new CachedTweetRepository($repo, (new FilesystemCachedRepository($expiresAfter, $cacheFolder)));
+        $tweetRepository = TweetRepositoryStaticFactory::createRepository($repo);
 
         $tweets = $tweetRepository->searchByUserName($twitterName, $limit);
 
