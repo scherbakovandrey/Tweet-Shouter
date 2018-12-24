@@ -16,11 +16,8 @@ class CachedTweetRepositoryTest extends TestCase
         $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $cachedRepository);
         $username = 'realDonaldTrump';
 
-        $this->assertFalse($cachedTweetRepository->hasItem($username));
-
         $tweets = $cachedTweetRepository->searchByUserName($username, 10);
         $this->assertEquals(count($tweets), 10);
-        $this->assertTrue($cachedTweetRepository->hasItem($username));
     }
 
     //TODO Add more tests to check the cache logic

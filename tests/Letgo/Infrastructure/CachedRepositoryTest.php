@@ -24,7 +24,7 @@ class CachedRepositoryTest extends TestCase
         $cache->clear();
         $username = 'realDonaldTrump';
         $formattedTweetsFromCache = $cache->get($username);
-        $this->assertEquals($formattedTweetsFromCache, null);
+        $this->assertEquals($formattedTweetsFromCache, []);
     }
 
     /*
