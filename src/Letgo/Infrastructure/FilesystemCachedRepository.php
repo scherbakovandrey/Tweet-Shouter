@@ -13,31 +13,26 @@ final class FilesystemCachedRepository implements CachedRepositoryInterface
 
     private $expiresAfter;
 
-    public function __construct(int $expiresAfter = 30)
+    public function __construct(int $expiresAfter = 30, $cacheFolder = 'cache')
     {
-        // init cache pool of file system adapter
-        $this->cachePool = new FilesystemAdapter('', 0, 'cache');
+        $this->cachePool = new FilesystemAdapter('', 0, $cacheFolder);
 
-        if (!empty($expiresAfter))
-            $this->expiresAfter = $expiresAfter;
-
-        $this->clear();
+        $this->expiresAfter = $expiresAfter;
     }
 
     public function setExpiresAfter(int $expiresAfter) {
         $this->expiresAfter = $expiresAfter;
+        return $this;
     }
 
     public function save(string $key, array $items) : void {
         $cachedItems = $this->cachePool->getItem($key);
-        if (!$cachedItems->isHit()) {
-            $cachedItems->set($items);
-            $cachedItems->expiresAfter($this->expiresAfter);
-            $this->cachePool->save($cachedItems);
-        }
+        $cachedItems->set($items);
+        $cachedItems->expiresAfter($this->expiresAfter);
+        $this->cachePool->save($cachedItems);
     }
 
-    public function get(string $key) : array {
+    public function get(string $key): array {
         if ($this->cachePool->hasItem($key)) {
             $cachedItems = $this->cachePool->getItem($key);
             return $cachedItems->get();

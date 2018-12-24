@@ -2,7 +2,7 @@
 
 namespace App\Letgo\Domain;
 
-interface TweetRepository
+interface TweetRepositoryInterface
 {
     public function searchByUserName(string $username, int $limit): array;
 }

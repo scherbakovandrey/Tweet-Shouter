@@ -13,6 +13,6 @@ final class Tweet
 
     public function getText(): string
     {
-        return TweetFormatter::format($this->text);
+        return $this->text;
     }
 }

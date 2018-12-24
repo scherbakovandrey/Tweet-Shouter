@@ -10,6 +10,7 @@ class CachedRepositoryTest extends TestCase
     public function testSaveItems()
     {
         $cache = new FilesystemCachedRepository();
+        $cache->clear();
         $cache->setExpiresAfter(30);
         $username = 'realDonaldTrump';
         $cache->save($username, $this->getSampleFormattedTweets());
@@ -20,9 +21,10 @@ class CachedRepositoryTest extends TestCase
     public function testGetNotSavedItems()
     {
         $cache = new FilesystemCachedRepository();
+        $cache->clear();
         $username = 'realDonaldTrump';
         $formattedTweetsFromCache = $cache->get($username);
-        $this->assertEquals($formattedTweetsFromCache, []);
+        $this->assertEquals($formattedTweetsFromCache, null);
     }
 
     /*

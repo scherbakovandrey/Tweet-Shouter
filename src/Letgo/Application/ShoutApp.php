@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Letgo\Infrastructure;
+namespace App\Letgo\Application;
 
-use App\Letgo\Domain\ShoutServiceInterface;
+use App\Letgo\Domain\ShoutInterface;
+use App\Letgo\Domain\TweetFormatter;
+use App\Letgo\Domain\TweetsOutput;
+use App\Letgo\Infrastructure\TweetRepositoryInMemory;
+use App\Letgo\Infrastructure\FilesystemCachedRepository;
+use App\Letgo\Infrastructure\CachedTweetRepository;
+
 use Symfony\Component\HttpFoundation\Response;
 
-class ShoutService implements ShoutServiceInterface
+class ShoutApp implements ShoutInterface
 {
     /**
      * @param TweetRepositoryInMemory $repo
@@ -21,15 +27,14 @@ class ShoutService implements ShoutServiceInterface
                 'error' => 'Limit parameter MUST be equal or less than 10.',
             ];
         }
-
         $expiresAfter = $_SERVER['CACHE_EXPIRES_AFTER'];
+        $cacheFolder = $_SERVER['CACHE_FOLDER'];
 
-        $tweetRepository = $repo;
-        //$tweetRepository = new CachedTweetRepository($repo, new FilesystemCachedRepository($expiresAfter));
+        //$tweetRepository = $repo;
+        $tweetRepository = new CachedTweetRepository($repo, (new FilesystemCachedRepository($expiresAfter, $cacheFolder)));
 
         $tweets = $tweetRepository->searchByUserName($twitterName, $limit);
 
-        //What if username is not valid or doesn't exit? We may return empty $tweets array
         if (!count($tweets)) {
             return [
                 'status' => Response::HTTP_NOT_FOUND,
@@ -37,10 +42,7 @@ class ShoutService implements ShoutServiceInterface
             ];
         }
 
-        $formattedTweets = [];
-        foreach ($tweets as $tweet) {
-            $formattedTweets[] = $tweet->getText();
-        }
+        $formattedTweets = (new TweetsOutput(new TweetFormatter()))->output($tweets);
 
         return [
             'status' => Response::HTTP_OK,

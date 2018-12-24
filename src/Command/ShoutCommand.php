@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
-use App\Letgo\Infrastructure\ShoutService;
+use App\Letgo\Application\ShoutApp;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 
 class ShoutCommand extends Command
@@ -15,20 +15,14 @@ class ShoutCommand extends Command
     protected static $defaultName = 'app:shout';
 
     /**
-     * @var ShoutServiceInterface
-     */
-    private $shoutService;
-
-    /**
-     * @var TweetRepositoryInMemory
+     * @var \App\Letgo\Infrastructure\TweetRepositoryInMemory
      */
     private $repo;
 
-    public function __construct(ShoutService $shoutService, TweetRepositoryInMemory $repo)
+    public function __construct(\App\Letgo\Infrastructure\TweetRepositoryInMemory $repo)
     {
         parent::__construct();
 
-        $this->shoutService = $shoutService;
         $this->repo = $repo;
     }
 
@@ -45,7 +39,7 @@ class ShoutCommand extends Command
         $twitterName = $input->getArgument('twitterName');
         $limit = $input->getArgument('limit');
 
-        $apiResponse = $this->shoutService->shout($this->repo, $twitterName, $limit);
+        $apiResponse = (new ShoutApp())->shout($this->repo, $twitterName, $limit);
 
         if ($apiResponse['status'] != Response::HTTP_OK) {
             $output->writeln('Error: ' . $apiResponse['error']);

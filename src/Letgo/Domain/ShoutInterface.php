@@ -4,7 +4,7 @@ namespace App\Letgo\Domain;
 
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 
-interface ShoutServiceInterface
+interface ShoutInterface
 {
     /**
      * @param TweetRepositoryInMemory $repo

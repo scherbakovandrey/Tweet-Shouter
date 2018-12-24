@@ -2,11 +2,11 @@
 
 namespace App\Letgo\Domain;
 
-interface TweetServiceInterface
+interface TweetOutputInterface
 {
     /**
      * @param Tweet[] $tweets
      * @return array
      */
-    public function format($tweets): array;
+    public function output(array $tweets): array;
 }

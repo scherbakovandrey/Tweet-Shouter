@@ -3,16 +3,14 @@
 namespace App\Letgo\Infrastructure;
 
 use App\Letgo\Domain\Tweet;
-use App\Letgo\Domain\TweetRepository;
+use App\Letgo\Domain\TweetRepositoryInterface;
 
-final class CachedTweetRepository implements TweetRepository
+final class CachedTweetRepository implements TweetRepositoryInterface
 {
-    static $maxHits = 2;
-
-    static $hitsCounter = [];
+    private static $cacheNamespace = 'tweets.';
 
     /**
-     * @var TweetRepository
+     * @var TweetRepositoryInterface
      */
     private $repo;
 
@@ -21,7 +19,7 @@ final class CachedTweetRepository implements TweetRepository
      */
     private $cachedRepository;
 
-    public function __construct(TweetRepository $repo, CachedRepositoryInterface $cachedRepository)
+    public function __construct(TweetRepositoryInterface $repo, CachedRepositoryInterface $cachedRepository)
     {
         $this->repo = $repo;
         $this->cachedRepository = $cachedRepository;
@@ -34,47 +32,33 @@ final class CachedTweetRepository implements TweetRepository
      */
     public function searchByUserName(string $username, int $limit): array
     {
-        $tweets = [];
+        $tweets = $this->getTweetsFromCacheRepository($username, $limit);
 
-        if (!isset(self::$hitsCounter[$username])) {
-            self::$hitsCounter[$username] = 0;
-        }
-
-        //check if we hit cache less then $maxHits times
-        if (self::$hitsCounter[$username] < self::$maxHits) {
-            //check if we have information in cache
-            $tweets = $this->cachedRepository->get('tweets.' . $username);
-
-            //check if we have enough items (or we don't have any) based on current limit requested, otherwise we need to hit API and update the cache
-            if (count($tweets) >= $limit) {
-                //get just $limit first items from cache
-                $tweets = array_slice($tweets, 0, $limit);
-
-                //increment hits counter
-                self::$hitsCounter[$username]++;
-            } else {
-                $tweets = [];
-            }
-        }  else {
-            //clear the cache
-            $this->cachedRepository->clear();
-
-            //reset the hits counter
-            self::$hitsCounter[$username] = 0;
-        }
-
-        //if we don't find anything in cache we hit API
+        //if there are no tweets in cache or there are not enough tweets - we hit API and save items to cache
         if (!count($tweets)) {
             $tweets = $this->repo->searchByUserName($username, $limit);
-
-            //save items to cache
-            $this->cachedRepository->save('tweets.' . $username, $tweets);
+            $this->save($username, $tweets);
         }
         return $tweets;
     }
 
-    public function hasItem($username): bool
+    private function getTweetsFromCacheRepository(string $username, int $limit) : array
     {
-        return $this->cachedRepository->hasItem('tweets.' . $username);
+        $tweets = $this->cachedRepository->get(self::$cacheNamespace . $username);
+
+        //check if we have enough items (or we don't have any) based on current limit requested, otherwise we need to hit API and update the cache
+        if (count($tweets) >= $limit) {
+            //get just $limit first items from cache
+            $tweets = array_slice($tweets, 0, $limit);
+        } else {
+            //we don't have enough tweets in cache so we need to get it from API
+            $tweets = [];
+        }
+        return $tweets;
+    }
+
+    private function save($username, $tweets)
+    {
+        $this->cachedRepository->save(self::$cacheNamespace . $username, $tweets);
     }
 }
