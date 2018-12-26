@@ -46,3 +46,35 @@ Let's pretend this is a super critical application for the company and you're go
 * **Simplicity**: We like separate code in domain, application and infrastructure layers. 
 If our product owner asks us for the same application 
 but accessed by command line (instead of the http server) it should be super easy!
+
+## Requirements
+
+  * PHP 7.1.3 or higher;
+  * and the [Symfony application requirements][2].
+
+## Installation
+
+Execute these commands to install the project:
+
+```bash
+$ cd Tweet-Shouter/
+$ composer install
+```
+
+## Usage
+
+Run the built-in web server and access the application in your browser at <http://localhost:8000>:
+
+```bash
+$ cd Tweet-Shouter/
+$ php bin/console server:run
+```
+
+## Tests
+
+Execute these commands to run tests:
+
+```bash
+$ cd Tweet-Shouter/
+$ ./vendor/bin/simple-phpunit
+```
