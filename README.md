@@ -61,13 +61,13 @@ $ cd Tweet-Shouter/
 $ composer install
 ```
 
-##Setup
+## Setup
 
 Update .env with the cache settings:
 
-CACHE_LAYER=true #set to false if you don't want to use cache layer
-CACHE_EXPIRES_AFTER=30 #Time in seconds for cache expiration, helps avoiding hitting Twitter's API twice for the same username
-CACHE_FOLDER=cache #path to store cache
+  * CACHE_LAYER=true (set to false if you don't want to use cache layer)
+  * CACHE_EXPIRES_AFTER=30 (time in seconds for cache expiration, helps avoiding hitting Twitter's API twice for the same username)
+  * CACHE_FOLDER=cache (path to store cache)
 
 ## Usage
 
