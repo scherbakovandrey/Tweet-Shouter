@@ -49,6 +49,34 @@ class CachedTweetRepositoryTest extends TestCase
         $this->assertEquals($tweetsFromApi, $tweetsFromCachedRepository);
     }
 
+    public function testGetItemsForAnotherUsername()
+    {
+        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $this->cachedRepository);
+
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
+        $this->assertEquals(count($tweetsFromCache), 0);
+
+        $tweetsFromApi = $cachedTweetRepository->searchByUserName($this->username, 5);
+        $this->assertEquals(count($tweetsFromApi), 5);
+
+        $tweetsFromApiForAnotherUser = $cachedTweetRepository->searchByUserName('anotherusername', 5);
+        $this->assertEquals(count($tweetsFromApiForAnotherUser), 5);
+
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
+        $this->assertEquals(count($tweetsFromCache), 5);
+
+        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($this->username, 5);
+        $this->assertEquals(count($tweetsFromCachedRepository), 5);
+
+        $tweetsFromCachedRepositoryForAnotherUser = $cachedTweetRepository->searchByUserName('anotherusername', 5);
+        $this->assertEquals(count($tweetsFromCachedRepositoryForAnotherUser), 5);
+
+        $this->assertEquals($tweetsFromApi, $tweetsFromCachedRepository);
+        $this->assertEquals($tweetsFromApiForAnotherUser, $tweetsFromCachedRepositoryForAnotherUser);
+
+        $this->assertNotEquals($tweetsFromApi, $tweetsFromApiForAnotherUser);
+    }
+
     public function testGetItemsTwiceTimeIsOver()
     {
         $this->cachedRepository->setExpiresAfter(1);
