@@ -50,7 +50,7 @@ but accessed by command line (instead of the http server) it should be super eas
 ## Requirements
 
   * PHP 7.1.3 or higher;
-  * and the [Symfony application requirements][2].
+  * and the [Symfony application requirements][1].
 
 ## Installation
 
@@ -78,3 +78,6 @@ Execute these commands to run tests:
 $ cd Tweet-Shouter/
 $ ./vendor/bin/simple-phpunit
 ```
+
+
+[1]: https://symfony.com/doc/current/reference/requirements.html
