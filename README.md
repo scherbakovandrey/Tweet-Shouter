@@ -61,13 +61,21 @@ $ cd Tweet-Shouter/
 $ composer install
 ```
 
+##Setup
+
+Update .env with the cache settings:
+
+CACHE_LAYER=true #set to false if you don't want to use cache layer
+CACHE_EXPIRES_AFTER=30 #Time in seconds for cache expiration, helps avoiding hitting Twitter's API twice for the same username
+CACHE_FOLDER=cache #path to store cache
+
 ## Usage
 
 Run the built-in web server and access the application in your browser at <http://localhost:8000>:
 
 ```bash
 $ cd Tweet-Shouter/
-$ php bin/console server:run
+$ php -S 127.0.0.1:8000 -t public
 ```
 
 ## Tests
