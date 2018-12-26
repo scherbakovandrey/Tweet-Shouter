@@ -10,7 +10,7 @@ class TweetRepositoryStaticFactory
         if ($cacheLayer) {
             $expiresAfter = $_SERVER['CACHE_EXPIRES_AFTER'];
             $cacheFolder = $_SERVER['CACHE_FOLDER'];
-            $tweetRepository = new CachedTweetRepository($repo, (new FilesystemCachedRepository($expiresAfter, $cacheFolder)));
+            $tweetRepository = new CachedTweetRepository($repo, (new FilesystemCachedRepository('', $expiresAfter, $cacheFolder)));
         } else {
             $tweetRepository = $repo;
         }

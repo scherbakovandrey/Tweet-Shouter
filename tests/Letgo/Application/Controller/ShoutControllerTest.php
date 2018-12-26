@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Letgo\Tests\Controller;
+namespace App\Tests\Letgo\Application\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;

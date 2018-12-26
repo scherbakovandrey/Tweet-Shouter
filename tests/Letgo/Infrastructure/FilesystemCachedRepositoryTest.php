@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Letgo\Tests\Domain;
+namespace App\Tests\Letgo\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use App\Letgo\Infrastructure\FilesystemCachedRepository;
 
-class CachedRepositoryTest extends TestCase
+class FilesystemCachedRepositoryTest extends TestCase
 {
     public function testSaveItems()
     {
@@ -26,8 +26,6 @@ class CachedRepositoryTest extends TestCase
         $formattedTweetsFromCache = $cache->get($username);
         $this->assertEquals($formattedTweetsFromCache, []);
     }
-
-    /*
 
     public function testGetNotExpiredItems()
     {
@@ -51,7 +49,14 @@ class CachedRepositoryTest extends TestCase
         $this->assertEquals($formattedTweetsFromCache, []);
     }
 
-    */
+    public function testHasItem()
+    {
+        $cache = new FilesystemCachedRepository();
+        $username = 'realDonaldTrump';
+        $this->assertFalse($cache->hasItem($username));
+        $cache->save($username, $this->getSampleFormattedTweets());
+        $this->assertTrue($cache->hasItem($username));
+    }
 
     private function getSampleFormattedTweets()
     {

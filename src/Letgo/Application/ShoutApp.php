@@ -4,10 +4,9 @@ namespace App\Letgo\Application;
 
 use App\Letgo\Domain\ShoutInterface;
 use App\Letgo\Domain\TweetFormatter;
-use App\Letgo\Domain\TweetsOutput;
+use App\Letgo\Domain\TweetShouter;
 use App\Letgo\Infrastructure\TweetRepositoryInMemory;
 use App\Letgo\Infrastructure\TweetRepositoryStaticFactory;
-
 use Symfony\Component\HttpFoundation\Response;
 
 class ShoutApp implements ShoutInterface
@@ -38,14 +37,12 @@ class ShoutApp implements ShoutInterface
             ];
         }
 
-        $formattedTweets = (new TweetsOutput(new TweetFormatter()))->output($tweets);
+        $shoutedTweets = (new TweetShouter(new TweetFormatter()))->shout($tweets);
 
         return [
             'status' => Response::HTTP_OK,
             'error' => '',
-            'tweets' => $formattedTweets
+            'tweets' => $shoutedTweets
         ];
-
-        return $formattedTweets;
     }
 }

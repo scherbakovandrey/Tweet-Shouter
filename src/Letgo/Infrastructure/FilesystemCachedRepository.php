@@ -13,9 +13,9 @@ final class FilesystemCachedRepository implements CachedRepositoryInterface
 
     private $expiresAfter;
 
-    public function __construct(int $expiresAfter = 30, $cacheFolder = 'cache')
+    public function __construct($namespace = '', int $expiresAfter = 30, $cacheFolder = 'cache')
     {
-        $this->cachePool = new FilesystemAdapter('', 0, $cacheFolder);
+        $this->cachePool = new FilesystemAdapter($namespace, 0, $cacheFolder);
         $this->expiresAfter = $expiresAfter;
     }
 

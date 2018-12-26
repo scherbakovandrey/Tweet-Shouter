@@ -4,7 +4,7 @@ namespace App\Letgo\Domain;
 
 use App\Letgo\Domain\TweetFormatterServiceInterface;
 
-class TweetsOutput implements TweetOutputInterface
+class TweetShouter implements TweetShouterInterface
 {
     /**
      * @var FormatInterface
@@ -20,12 +20,12 @@ class TweetsOutput implements TweetOutputInterface
      * @param Tweet[] $tweets
      * @return array
      */
-    public function output(array $tweets): array
+    public function shout(array $tweets): array
     {
-        $formattedTweets = [];
+        $shoutedTweets = [];
         foreach ($tweets as $tweet) {
-            $formattedTweets[] = $this->formatter->format($tweet->getText());
+            $shoutedTweets[] = $this->formatter->format($tweet->getText());
         }
-        return $formattedTweets;
+        return $shoutedTweets;
     }
 }

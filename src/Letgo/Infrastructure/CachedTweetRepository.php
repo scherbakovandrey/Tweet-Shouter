@@ -7,7 +7,7 @@ use App\Letgo\Domain\TweetRepositoryInterface;
 
 final class CachedTweetRepository implements TweetRepositoryInterface
 {
-    private static $cacheNamespace = 'tweets.';
+    public static $cacheNamespace = 'tweets.';
 
     /**
      * @var TweetRepositoryInterface

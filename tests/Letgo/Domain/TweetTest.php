@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Letgo\Tests\Domain;
+namespace App\Tests\Letgo\Domain;
 
 use PHPUnit\Framework\TestCase;
 use App\Letgo\Domain\Tweet;

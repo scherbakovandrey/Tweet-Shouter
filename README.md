@@ -1,5 +1,3 @@
-# Letgo Tech Test 
-
 ## Description
 We want you to implement a REST API that, given a twitter username and a count N, returns the last N tweets shouted. 
 Shouting a tweet consists of transforming it to uppercase and adding an exclamation mark at the end. 

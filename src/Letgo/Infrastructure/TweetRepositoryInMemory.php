@@ -5,7 +5,7 @@ namespace App\Letgo\Infrastructure;
 use App\Letgo\Domain\Tweet;
 use App\Letgo\Domain\TweetRepositoryInterface;
 
-final class TweetRepositoryInMemory implements TweetRepositoryInterface
+class TweetRepositoryInMemory implements TweetRepositoryInterface
 {
     /**
      * @param string $username
