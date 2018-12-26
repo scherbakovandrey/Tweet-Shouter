@@ -1,3 +1,6 @@
+Tweet Shouter Application [Symfony]
+==================================
+
 ## Description
 We want you to implement a REST API that, given a twitter username and a count N, returns the last N tweets shouted. 
 Shouting a tweet consists of transforming it to uppercase and adding an exclamation mark at the end. 
@@ -43,4 +46,3 @@ Let's pretend this is a super critical application for the company and you're go
 * **Simplicity**: We like separate code in domain, application and infrastructure layers. 
 If our product owner asks us for the same application 
 but accessed by command line (instead of the http server) it should be super easy!
-

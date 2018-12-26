@@ -9,39 +9,41 @@ use App\Letgo\Infrastructure\CachedTweetRepository;
 
 class CachedTweetRepositoryTest extends TestCase
 {
+    private $cachedRepository;
+
+    private $username = 'realDonaldTrump';
+
+    protected function setUp()
+    {
+        $this->cachedRepository = new FilesystemCachedRepository();
+        $this->cachedRepository->clear();
+    }
+
     public function testSaveItems()
     {
-        $cachedRepository = new FilesystemCachedRepository();
-        $cachedRepository->clear();
+        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $this->cachedRepository);
 
-        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $cachedRepository);
-        $username = 'realDonaldTrump';
-
-        $tweets = $cachedTweetRepository->searchByUserName($username, 10);
+        $tweets = $cachedTweetRepository->searchByUserName($this->username, 10);
         $this->assertEquals(count($tweets), 10);
-        $tweetsFromCache = $cachedRepository->get(CachedTweetRepository::$cacheNamespace . $username);
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
 
         $this->assertEquals($tweets, $tweetsFromCache);
     }
 
     public function testGetItemsTwice()
     {
-        $cachedRepository = new FilesystemCachedRepository();
-        $cachedRepository->clear();
+        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $this->cachedRepository);
 
-        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $cachedRepository);
-        $username = 'realDonaldTrump';
-
-        $tweetsFromCache = $cachedRepository->get(CachedTweetRepository::$cacheNamespace . $username);
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
         $this->assertEquals(count($tweetsFromCache), 0);
 
-        $tweetsFromApi = $cachedTweetRepository->searchByUserName($username, 5);
+        $tweetsFromApi = $cachedTweetRepository->searchByUserName($this->username, 5);
         $this->assertEquals(count($tweetsFromApi), 5);
 
-        $tweetsFromCache = $cachedRepository->get(CachedTweetRepository::$cacheNamespace . $username);
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
         $this->assertEquals(count($tweetsFromCache), 5);
 
-        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($username, 5);
+        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($this->username, 5);
         $this->assertEquals(count($tweetsFromCachedRepository), 5);
 
         $this->assertEquals($tweetsFromApi, $tweetsFromCachedRepository);
@@ -49,26 +51,42 @@ class CachedTweetRepositoryTest extends TestCase
 
     public function testGetItemsTwiceTimeIsOver()
     {
-        $cachedRepository = new FilesystemCachedRepository();
-        $cachedRepository->setExpiresAfter(1);
-        $cachedRepository->clear();
+        $this->cachedRepository->setExpiresAfter(1);
 
-        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $cachedRepository);
-        $username = 'realDonaldTrump';
+        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $this->cachedRepository);
 
-        $tweetsFromCache = $cachedRepository->get(CachedTweetRepository::$cacheNamespace . $username);
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
         $this->assertEquals(count($tweetsFromCache), 0);
 
-        $tweetsFromApi = $cachedTweetRepository->searchByUserName($username, 5);
+        $tweetsFromApi = $cachedTweetRepository->searchByUserName($this->username, 5);
         $this->assertEquals(count($tweetsFromApi), 5);
 
-        $tweetsFromCache = $cachedRepository->get(CachedTweetRepository::$cacheNamespace . $username);
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
         $this->assertEquals(count($tweetsFromCache), 5);
 
         sleep(2);
 
-        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($username, 5);
+        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($this->username, 5);
         $this->assertEquals(count($tweetsFromCachedRepository), 5);
+
+        $this->assertNotEquals($tweetsFromApi, $tweetsFromCachedRepository);
+    }
+
+    public function testNotEnoughTweetsInCache()
+    {
+        $cachedTweetRepository = new CachedTweetRepository(new TweetRepositoryInMemory(), $this->cachedRepository);
+
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
+        $this->assertEquals(count($tweetsFromCache), 0);
+
+        $tweetsFromApi = $cachedTweetRepository->searchByUserName($this->username, 5);
+        $this->assertEquals(count($tweetsFromApi), 5);
+
+        $tweetsFromCache = $this->cachedRepository->get(CachedTweetRepository::$cacheNamespace . $this->username);
+        $this->assertEquals(count($tweetsFromCache), 5);
+
+        $tweetsFromCachedRepository = $cachedTweetRepository->searchByUserName($this->username, 6);
+        $this->assertEquals(count($tweetsFromCachedRepository), 6);
 
         $this->assertNotEquals($tweetsFromApi, $tweetsFromCachedRepository);
     }
