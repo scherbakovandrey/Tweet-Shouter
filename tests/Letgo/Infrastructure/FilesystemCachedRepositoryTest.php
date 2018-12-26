@@ -3,6 +3,7 @@
 namespace App\Tests\Letgo\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
+use App\Letgo\Domain\Tweet;
 use App\Letgo\Infrastructure\FilesystemCachedRepository;
 
 class FilesystemCachedRepositoryTest extends TestCase
@@ -20,50 +21,52 @@ class FilesystemCachedRepositoryTest extends TestCase
     public function testSaveItems()
     {
         $this->cachedRepository->setExpiresAfter(30);
-        $this->cachedRepository->save($this->username, $this->getSampleFormattedTweets());
-        $formattedTweetsFromCache = $this->cachedRepository->get($this->username);
-        $this->assertEquals($formattedTweetsFromCache, $this->getSampleFormattedTweets());
+        $this->cachedRepository->save($this->username, $this->getSampleTweets());
+        $tweetsFromCache = $this->cachedRepository->get($this->username);
+        $this->assertEquals($tweetsFromCache, $this->getSampleTweets());
     }
 
     public function testGetNotSavedItems()
     {
-        $formattedTweetsFromCache = $this->cachedRepository->get($this->username);
-        $this->assertEquals($formattedTweetsFromCache, []);
+        $tweetsFromCache = $this->cachedRepository->get($this->username);
+        $this->assertEquals($tweetsFromCache, []);
     }
 
     public function testGetNotExpiredItems()
     {
         $this->cachedRepository->setExpiresAfter(2);
-        $this->cachedRepository->save($this->username, $this->getSampleFormattedTweets());
+        $this->cachedRepository->save($this->username, $this->getSampleTweets());
+
         sleep(1);
-        $formattedTweetsFromCache = $this->cachedRepository->get($this->username);
-        $this->assertEquals($formattedTweetsFromCache, $this->getSampleFormattedTweets());
+
+        $tweetsFromCache = $this->cachedRepository->get($this->username);
+        $this->assertEquals($tweetsFromCache, $this->getSampleTweets());
     }
 
     public function testGetExpiredItems()
     {
         $this->cachedRepository->setExpiresAfter(1);
-        $this->cachedRepository->save($this->username, $this->getSampleFormattedTweets());
+        $this->cachedRepository->save($this->username, $this->getSampleTweets());
 
         sleep(2);
 
-        $formattedTweetsFromCache = $this->cachedRepository->get($this->username);
-        $this->assertEquals($formattedTweetsFromCache, []);
+        $tweetsFromCache = $this->cachedRepository->get($this->username);
+        $this->assertEquals($tweetsFromCache, []);
     }
 
     public function testHasItem()
     {
         $this->assertFalse($this->cachedRepository->hasItem($this->username));
-        $this->cachedRepository->save($this->username, $this->getSampleFormattedTweets());
+        $this->cachedRepository->save($this->username, $this->getSampleTweets());
         $this->assertTrue($this->cachedRepository->hasItem($this->username));
     }
 
-    private function getSampleFormattedTweets()
+    private function getSampleTweets()
     {
         return [
-            'TWEET 1!',
-            'TWEET 2!',
-            'TWEET 3!'
+            new Tweet('TWEET 1!'),
+            new Tweet('TWEET 2!'),
+            new Tweet('TWEET 3!')
         ];
     }
 }
