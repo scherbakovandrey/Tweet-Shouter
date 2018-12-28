@@ -1,0 +1,10 @@
+Things we liked:
+
+*Cache implemented using the decorator pattern
+*Acceptance tests
+
+Things we think could be improved:
+*Usage of global variables `$_SERVER` inside the services
+*Anemic domain model (the shout logic could be inside the `Tweet` class)
+*Fragile tests. 100% of coverage doesn't imply a "good testing". When you have (almost) 1 test per class you're creating tests that are not giving any value. For example, the `TweetTest` it's 
+testing something that indirectly has been tested in `TweetShouterTest` that also has been indirectly tested in `TweetFormatterTest`. We should do the minimum tests that add value to the company.
