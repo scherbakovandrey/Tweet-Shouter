@@ -1,4 +1,7 @@
+static:
+    path: /
+    controller: App\Letgo\Application\Controller\PagesController::index
+
 shout:
     path: /shout/{twitterName}
     controller: App\Letgo\Application\Controller\ShoutController::index
-

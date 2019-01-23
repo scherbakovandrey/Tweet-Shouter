@@ -23,4 +23,9 @@ final class ShoutController extends AbstractController
 
         return JsonResponse::create($apiResponse['tweets']);
     }
+
+    public function show()
+    {
+	return JsonResponse::create(['status' => 'Ok']);
+    }
 }

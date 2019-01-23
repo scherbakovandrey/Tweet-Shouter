@@ -86,6 +86,4 @@ Execute these commands to run tests:
 $ cd Tweet-Shouter/
 $ ./vendor/bin/simple-phpunit
 ```
-
-
 [1]: https://symfony.com/doc/current/reference/requirements.html
